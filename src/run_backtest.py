@@ -52,3 +52,7 @@ prices = load_data(tickers, start_date, end_date).dropna()
 
 returns = prices.pct_change().dropna()
 
+monthly_prices = prices.resample('M').last()
+
+monthly_returns = monthly_prices.pct_change().dropna()
+
