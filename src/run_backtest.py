@@ -56,3 +56,10 @@ monthly_prices = prices.resample('M').last()
 
 monthly_returns = monthly_prices.pct_change().dropna()
 
+rolling_12m = (1 + monthly_returns).rolling(window=12).apply(lambda x: x.prod() - 1)
+
+momentum_raw = rolling_12m / (1 + monthly_returns)
+
+momentum_scores = momentum_raw.copy()
+momentum_scores.columns = monthly_returns.columns
+
