@@ -2,3 +2,9 @@ prices.plot(figsize=(12,6))
 plt.title("Daily Price History")
 plt.show()
 
+monthly_prices = prices.resample('M').last()
+monthly_prices.plot()
+plt.title("Monthly Price History")
+plt.show()
+
+
