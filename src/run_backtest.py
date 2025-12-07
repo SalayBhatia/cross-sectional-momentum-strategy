@@ -47,3 +47,8 @@ tickers= [
 
 start_date = "2015-01-01"
 end_date = None
+
+prices = load_data(tickers, start_date, end_date).dropna()
+
+returns = prices.pct_change().dropna()
+
