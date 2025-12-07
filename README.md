@@ -1,1 +1,1 @@
-# Cross-Sectional-Momentum-Strategy
+# cross-sectional-momentum-strategy
