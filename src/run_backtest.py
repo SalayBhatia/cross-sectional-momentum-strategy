@@ -63,3 +63,11 @@ momentum_raw = rolling_12m / (1 + monthly_returns)
 momentum_scores = momentum_raw.copy()
 momentum_scores.columns = monthly_returns.columns
 
+long_thresh = momentum_scores.quantile(0.9, axis=1)   # 90th percentile
+short_thresh = momentum_scores.quantile(0.1, axis=1)  # 10th percentile
+
+signals = pd.DataFrame(0, index=momentum_scores.index, columns=momentum_scores.columns)
+
+signals[momentum_scores.ge(long_thresh, axis=0)] = 1
+signals[momentum_scores.le(short_thresh, axis=0)] = -1
+
