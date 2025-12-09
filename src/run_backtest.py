@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import yfinance as yf
+from data_loader import load_data
 
 tickers= [
     "ABB.NS", "ABCAPITAL.NS", "ABFRL.NS", "ACC.NS", "ADANIENT.NS", 
@@ -70,4 +71,33 @@ signals = pd.DataFrame(0, index=momentum_scores.index, columns=momentum_scores.c
 
 signals[momentum_scores.ge(long_thresh, axis=0)] = 1
 signals[momentum_scores.le(short_thresh, axis=0)] = -1
+
+def make_weights_for_row(signal_row: pd.Series) -> pd.Series:
+    weights = signal_row.copy().astype(float)
+    
+    n_long = (signal_row == 1).sum()
+    n_short = (signal_row == -1).sum()
+    
+    if n_long > 0:
+        weights[signal_row == 1] =  1.0 / n_long
+    else:
+        weights[signal_row == 1] = 0.0
+    
+    if n_short > 0:
+        weights[signal_row == -1] = -1.0 / n_short
+    else:
+        weights[signal_row == -1] = 0.0
+        
+    weights[signal_row == 0] = 0.0
+    
+    return weights
+
+monthly_weights = signals.apply(
+    make_weights_for_row,
+    axis=1,
+    result_type="expand"
+)
+
+daily_weights = monthly_weights.reindex(returns.index, method="ffill").fillna(0.0)
+
 
